@@ -1,13 +1,5 @@
-#create Server
-#create 3 routes
-#create 3 templates
-##create layout for template
-#create 2 form
-#create a database model
-
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
-from helper import get_movies, get_a_movie
 from form import ReviewForm
 from helper import get_movie_details, get_movies
 from flask_sqlalchemy import SQLAlchemy
@@ -17,7 +9,7 @@ app = Flask(__name__)
 proxied = FlaskBehindProxy(app)  ## needed for Codio
 
 #create sqlite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db’
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -40,7 +32,7 @@ def index():
     return render_template('index.html', title="Movie Search")
 
 
-@app.route('/movie/<id>', method=['GET', 'POST'])
+@app.route('/movie/<id>', methods=['GET', 'POST'])
 def select_movie(id):
     """ Displays movies Details and Reviews
         Allows users to create reviews
@@ -48,7 +40,7 @@ def select_movie(id):
     print(id)
 
     #get all movie details
-    movie_details = get_a_movie(str(id))
+    movie_details = get_movie_details(str(id))
     print(movie_details)
 
     #get wtform from form.py
@@ -56,12 +48,15 @@ def select_movie(id):
 
     #get all revies
     all_reviews = Review.query.filter_by(id=id).all()
+    print(all_reviews)
 
     #Check form is validated. Add form data to database
     if review_form.validate_on_submit():
+        print('FROM WAS VALIDATED!')
         #Get form data values
         review_rating = request.form.get('rating')
         review_details = request.form.get('review_details')
+
         #Add to database
         review = Review(id=id, review_details=review_details, rating=review_rating)
         db.session.add(review)
@@ -69,9 +64,9 @@ def select_movie(id):
         
         #Flash message to uset
         flash(f'Thank you for your feedback. Your review has been submitted!', 'success')
-        #return to 
+
         return redirect(url_for('select_movie', id=id, reviews=all_reviews))
-    return render_template('results.html', title="Select Movie", details=movie_details)
+    return render_template('results.html', title="Select Movie", details=movie_details, reviews=all_reviews, form=review_form)
 
 #Database Model Objects
 class Review(db.Model):
@@ -83,6 +78,7 @@ class Review(db.Model):
 #Creates tables
 with app.app_context():
     db.create_all()
+
 #Runs apps with configs
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'the key you generated'
