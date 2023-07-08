@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{{title}} : {{details}}
 <div class="content-section">
     <form method="POST" action="">
     {{ form.hidden_tag() }}
@@ -18,4 +19,7 @@
     <div class="form-group">{{ form.submit(class="btn btn-outline-info") }} </div>
     </form></div>
 
+    {% for review in reviews%}
+   <h5> {{review.rating }} : {{review.review}} </h5>
+    {%endfor%}
 {%endblock%}

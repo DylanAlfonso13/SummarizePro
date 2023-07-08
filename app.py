@@ -45,6 +45,7 @@ def select_movie(id):
 
     #get wtform from form.py
     review_form = ReviewForm()
+    print(request.form)
 
     #get all revies
     all_reviews = Review.query.filter_by(id=id).all()
@@ -53,12 +54,13 @@ def select_movie(id):
     #Check form is validated. Add form data to database
     if review_form.validate_on_submit():
         print('FROM WAS VALIDATED!')
+        
         #Get form data values
         review_rating = request.form.get('rating')
-        review_details = request.form.get('review_details')
-
+        review_text = request.form.get('review_text')
+        print(review_text)
         #Add to database
-        review = Review(id=id, review_details=review_details, rating=review_rating)
+        review = Review(id=id, review=review_text, rating=review_rating)
         db.session.add(review)
         db.session.commit()
         
@@ -70,10 +72,10 @@ def select_movie(id):
 
 #Database Model Objects
 class Review(db.Model):
-    review_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, nullable=False)
+    review_id = db.Column(db.Integer, primary_key=True,  autoincrement=True)
+    id = db.Column(db.String, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    review = db.Column(db.String(255), nullable=False)
+    review = db.Column(db.Text(255), nullable=False)
 
 #Creates tables
 with app.app_context():
@@ -82,4 +84,4 @@ with app.app_context():
 #Runs apps with configs
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'the key you generated'
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port='8080')
