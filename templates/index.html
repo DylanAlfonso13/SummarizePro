@@ -1,24 +1,4 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method="POST" action="">
-<div class="input-group input-group-lg">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-lg">{{title}}</span>
-    </div>
-    <input id="search" name="search" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
-    <button type="submit" class="btn btn-primary btn-lg">Search</button>
-</div>
-</form>
-
-<div class="container">
-    <ul>
-    {% if results %}
-    <h1>{{ subtitle }}</h1>
-        {% for result in results %}
-       <li> <a href="./{{ url_for('select_movie', id=result.movieID) }}">{{result.title}}</a></li>
-        {% endfor %}
-    {% endif %}
-</ul>
-  </div
 {% endblock %}

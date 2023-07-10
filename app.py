@@ -1,12 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
-from form import ReviewForm
-from helper import get_movie_details, get_movies
+# from helper import get_movie_details, get_movies
 from flask_sqlalchemy import SQLAlchemy
 
 #create Flask App
 app = Flask(__name__)
-proxied = FlaskBehindProxy(app)  ## needed for Codio
 
 #create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
