@@ -1,4 +1,20 @@
 {% extends 'base.html' %}
-
 {% block content %}
+<div class="row" style="text-align: center;">
+    <h1>Welcome to SummarizePro</h1>
+</div>
+<div class="row" style="text-align: center; padding: 20px 100px;">
+  <p>Are you tired of spending precious time sifting through lengthy articles or PDF documents to extract the key information? Look no further! SummarizePro is here to revolutionize your reading experience.</p>
+</div>
+<div class="row">
+  <div class="col" style="align-items: center;">
+  </div>
+  <!-- Need to fix this to look cleaner (button colors look wonky) -->
+  <div class="col" style="align-items: center;">
+    <a href="/pdf" class="btn btn-primary btn-lg" role="button">Summarize PDF</a>
+    <a href="/article" class="btn btn-primary btn-lg" role="button">Summarize Article</a>
+  </div>
+  <div class="col">
+  </div>
+</div>
 {% endblock %}
