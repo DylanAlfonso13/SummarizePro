@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row" style="text-align: center;">
+    <h1>Insert PDF using button below</h1>
+</div>
+<!-- Need to fix up styling later -->
+<div class="row" style="text-align: center;">
+    <form method="POST" action="">
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupFile01">Upload</label>
+            <input type="file" class="form-control" id="inputGroupFile01">
+            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+<!--        <div class="form-group">-->
+<!--            <input type="file"  name="fileupload" class="form-control-file" id="fileupload">-->
+<!--        </div>-->
