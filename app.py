@@ -2,9 +2,13 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
 # from helper import get_movie_details, get_movies
 from flask_sqlalchemy import SQLAlchemy
+import openai
+import os
+from url import grabText, gen_summary
 
 #create Flask App
 app = Flask(__name__)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 #create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -16,6 +20,11 @@ def index():
 
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
+    if request.method == "POST":
+        url = request.form['url']
+        text = grabText(url)
+        summary = gen_summary(text)
+        return render_template('pdf_page.html', summary=summary)
     return render_template('pdf_page.html')
 
 @app.route('/article', methods=['GET','POST'])
