@@ -1,4 +1,4 @@
-body {
+/* body {
     background: #fafafa;
     color: #333333;
     margin-top: 5rem;
@@ -6,6 +6,7 @@ body {
   
   h1, h2, h3, h4, h5, h6 {
     color: #444444;
+    
   }
   
   
@@ -15,6 +16,7 @@ body {
   
   .site-header .navbar-nav .nav-link {
     color: #000000;
+    
   }
   
   .site-header .navbar-nav .nav-link:hover {
@@ -82,3 +84,8 @@ body {
   .account-heading {
     font-size: 2.5rem;
   }
+ */
+
+ .main-title{
+  color: red;
+ }
