@@ -2,10 +2,14 @@
 {% block content %}
 <div class="row" style="text-align: center;">
     <h1>Put article link below</h1>
+</div>
+<div class="row" style="text-align: center; padding: 0px;">
     <p>
         Keep in mind: this is in early stages. Some articles unfortunately don't allow for scraping.
     </p>
 </div>
+
+
 <!-- Need to fix up styling later -->
 <div class="row" style="text-align: center;">
     <div class="col"></div>
@@ -34,11 +38,7 @@
     <h2>Error</h2>
 </div>
 <div class="row" style="text-align: center;">
-    <div class="col"></div>
-    <div class="col">
-        <p>{{ error_message }}</p>
-    </div>
-    <div class="col"></div>
+    <p style="margin-left: 20px; margin-right: 20px;">{{ error_message }}</p>
 </div>
 {% endif %}
 {% endblock %}
