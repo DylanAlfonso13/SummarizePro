@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row" style="text-align: center;">
+    <h1>History of Summaries</h1>
+</div>
+<div class="row" style="text-align: center;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>URL</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for summary in summaries %}
+            <tr>
+                <td>{{ summary.id }}</td>
+                <td>{{ summary.url }}</td>
+                <td>{{ summary.summary }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

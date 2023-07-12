@@ -15,7 +15,6 @@ def grabText(url):
     return text
 
 def gen_summary(text):
-    # fixed = process(text)
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
