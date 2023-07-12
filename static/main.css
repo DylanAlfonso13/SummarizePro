@@ -126,12 +126,6 @@ body {
     .site-header .navbar-brand {
       margin-right: auto;
     }
-    html, body {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
     
     .container {
       margin: 0 auto;
