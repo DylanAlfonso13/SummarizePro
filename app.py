@@ -1,8 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
-import PyPDF2
-import json
 from pdf import pdf_summary
 
 
