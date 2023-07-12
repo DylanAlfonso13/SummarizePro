@@ -22,6 +22,7 @@ def pdf():
         value = request.form.get('fileupload')
         return value
         # pdf_to_text(value)
+
     return render_template('pdf_page.html')
 
 @app.route('/convert', methods=['POST'])
@@ -31,6 +32,15 @@ def convert():
 
 @app.route('/article', methods=['GET','POST'])
 def article():
+    if request.method == "POST":
+        url = request.form['url']
+        try:
+            text = grabText(url)
+            summary = gen_summary(text)
+            return render_template('article_page.html', summary=summary)
+        except Exception as e:
+            error_message = str(e)
+            return render_template('article_page.html', error_message=error_message)
     return render_template('article_page.html')
 
 #Database Model Objects
@@ -50,7 +60,5 @@ with app.app_context():
 
 #Runs apps with configs
 if __name__ == '__main__':
-    text = grabText('https://coffeeandjunk.com/ruthless-truth/')
-    print(gen_summary(text))
-    # app.config['SECRET_KEY'] = 'the key you generated'
-    # app.run(debug=True, host='0.0.0.0', port='8080')
+    app.config['SECRET_KEY'] = 'the key you generated'
+    app.run(debug=True, host='0.0.0.0', port='8080')
