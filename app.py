@@ -3,12 +3,15 @@ from flask_behind_proxy import FlaskBehindProxy
 # from helper import get_movie_details, get_movies
 from flask_sqlalchemy import SQLAlchemy
 import openai
+from dotenv import load_dotenv
 import os
 from url import grabText, gen_summary
 
 #create Flask App
 app = Flask(__name__)
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Load in API Key
+load_dotenv()
+openai.api_key = os.environ.get('OPENAI_API_KEY')
 
 #create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -48,5 +51,7 @@ with app.app_context():
 
 #Runs apps with configs
 if __name__ == '__main__':
-    app.config['SECRET_KEY'] = 'the key you generated'
-    app.run(debug=True, host='0.0.0.0', port='8080')
+    text = grabText('https://coffeeandjunk.com/ruthless-truth/')
+    print(gen_summary(text))
+    # app.config['SECRET_KEY'] = 'the key you generated'
+    # app.run(debug=True, host='0.0.0.0', port='8080')
