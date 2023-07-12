@@ -21,6 +21,7 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
+# Note: make sure later we have summary add to DB
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
     return render_template('pdf_page.html')
@@ -32,11 +33,19 @@ def article():
         try:
             text = grabText(url)
             summary = gen_summary(text)
+            new_summary = Summary(url=url, summary=summary)
+            db.session.add(new_summary)
+            db.session.commit()
             return render_template('article_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
             return render_template('article_page.html', error_message=error_message)
     return render_template('article_page.html')
+
+@app.route('/summaries')
+def summaries():
+    summaries = Summary.query.all()
+    return render_template('summaries.html', summaries=summaries)
 
 #Database Model Objects
 class User(db.Model):
@@ -48,6 +57,11 @@ class User(db.Model):
         return f"User('{self.username}', '{self.email}')"
     with app.app_context():
         db.create_all()
+
+class Summary(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(200), nullable=False)
+    summary = db.Column(db.Text, nullable=False)
 
 #Creates tables
 with app.app_context():
