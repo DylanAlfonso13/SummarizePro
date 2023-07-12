@@ -1,27 +1,38 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
-#from helper import get_movie_details, get_movies
 from flask_sqlalchemy import SQLAlchemy
-from helper import pdf_to_text
+import PyPDF2
+import json
+from pdf import pdf_to_json
+
 
 #create Flask App
 app = Flask(__name__)
+
 
 #create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
 
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
     print(request.form)
     if request.method == 'POST':
         value = request.form.get('fileupload')
-        pdf_to_text(value)
+        return value
+        # pdf_to_text(value)
     return render_template('pdf_page.html')
+
+@app.route('/convert', methods=['POST'])
+def convert():
+    pdf_file = request.files['pdfFile']
+    return pdf_to_json(pdf_file)
 
 @app.route('/article', methods=['GET','POST'])
 def article():
