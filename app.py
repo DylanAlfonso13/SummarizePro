@@ -3,7 +3,7 @@ from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 import PyPDF2
 import json
-from pdf import pdf_to_json
+from pdf import pdf_summary
 
 
 #create Flask App
@@ -32,7 +32,7 @@ def pdf():
 @app.route('/convert', methods=['POST'])
 def convert():
     pdf_file = request.files['pdfFile']
-    return pdf_to_json(pdf_file)
+    return pdf_summary(pdf_file)
 
 @app.route('/article', methods=['GET','POST'])
 def article():
