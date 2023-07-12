@@ -6,8 +6,6 @@ from pdf import pdf_summary
 
 #create Flask App
 app = Flask(__name__)
-
-
 #create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
@@ -16,7 +14,6 @@ db = SQLAlchemy(app)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
-
 
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
@@ -53,5 +50,7 @@ with app.app_context():
 
 #Runs apps with configs
 if __name__ == '__main__':
-    app.config['SECRET_KEY'] = 'the key you generated'
-    app.run(debug=True, host='0.0.0.0', port='8080')
+    text = grabText('https://coffeeandjunk.com/ruthless-truth/')
+    print(gen_summary(text))
+    # app.config['SECRET_KEY'] = 'the key you generated'
+    # app.run(debug=True, host='0.0.0.0', port='8080')

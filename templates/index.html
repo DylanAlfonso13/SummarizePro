@@ -1,24 +1,20 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<form method="POST" action="">
-<div class="input-group input-group-lg">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-lg">{{title}}</span>
-    </div>
-    <input id="search" name="search" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
-    <button type="submit" class="btn btn-primary btn-lg">Search</button>
+<div class="row" style="text-align: center;">
+    <h1>Welcome to SummarizePro</h1>
 </div>
-</form>
-
-<div class="container">
-    <ul>
-    {% if results %}
-    <h1>{{ subtitle }}</h1>
-        {% for result in results %}
-       <li> <a href="./{{ url_for('select_movie', id=result.movieID) }}">{{result.title}}</a></li>
-        {% endfor %}
-    {% endif %}
-</ul>
-  </div
+<div class="row" style="text-align: center; padding: 20px 100px;">
+  <p>Are you tired of spending precious time sifting through lengthy articles or PDF documents to extract the key information? Look no further! SummarizePro is here to revolutionize your reading experience.</p>
+</div>
+<div class="row">
+  <div class="col" style="align-items: center;">
+  </div>
+  <!-- Need to fix this to look cleaner (button colors look wonky) -->
+  <div class="col" style="align-items: center;">
+    <a href="/pdf" class="btn btn-primary btn-lg" role="button">Summarize PDF</a>
+    <a href="/article" class="btn btn-primary btn-lg" role="button">Summarize Article</a>
+  </div>
+  <div class="col">
+  </div>
+</div>
 {% endblock %}
