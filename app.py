@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from pdf import pdf_summary
+from url import grabText, gen_summary
 
 
 #create Flask App
@@ -18,18 +19,29 @@ def index():
 # Note: make sure later we have summary add to DB
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
-    print(request.form)
     if request.method == 'POST':
-        value = request.form.get('fileupload')
-        return value
+        try:
+            pdf_file = request.files['pdfFile']
+            filename = pdf_file.filename
+            summary = pdf_summary(pdf_file)
+            new_summary = Summary(DBurl=filename, DBsummary=summary)
+            db.session.add(new_summary)
+            db.session.commit()
+            return render_template('pdf_page.html', summary=summary)
+        except Exception:
+            error_message = "Try inputting a different file, it's likely the wrong type"
+            return render_template('pdf_page.html', error_message=error_message)
+        # value = request.form.get('fileupload')
+        # print(value)
+        # return value
         # pdf_to_text(value)
 
     return render_template('pdf_page.html')
 
-@app.route('/convert', methods=['POST'])
-def convert():
-    pdf_file = request.files['pdfFile']
-    return pdf_summary(pdf_file)
+# @app.route('/convert', methods=['POST'])
+# def convert():
+    # pdf_file = request.files['pdfFile']
+    # return pdf_summary(pdf_file)
 
 @app.route('/article', methods=['GET','POST'])
 def article():
@@ -38,7 +50,7 @@ def article():
         try:
             text = grabText(url)
             summary = gen_summary(text)
-            new_summary = Summary(url=url, summary=summary)
+            new_summary = Summary(DBurl=url, DBsummary=summary)
             db.session.add(new_summary)
             db.session.commit()
             return render_template('article_page.html', summary=summary)
@@ -65,8 +77,8 @@ class User(db.Model):
 
 class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(200), nullable=False)
-    summary = db.Column(db.Text, nullable=False)
+    DBurl = db.Column(db.String(200), nullable=False)
+    DBsummary = db.Column(db.Text, nullable=False)
 
 #Creates tables
 with app.app_context():

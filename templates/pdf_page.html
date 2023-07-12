@@ -1,12 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <form method="post" action="/convert" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="pdfFile">Select PDF File:</label>
-            <input type="file" class="form-control-file" id="pdfFile" name="pdfFile">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<div class="row" style="text-align: center;">
+    <h1>Upload PDF Below</h1>
 </div>
+<div class="row" style="text-align: center; padding: 0px;">
+    <p>
+        Keep in mind: this is in early stages
+    </p>
+</div>
+<div class="row" style="text-align: center;">
+    <div class="col"></div>
+    <div class="col d-flex justify-content-center">
+        <form method="post" action="/pdf" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="pdfFile">Select PDF File:</label>
+                <input type="file" class="form-control-file" id="pdfFile" name="pdfFile">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+{% if summary %}
+<div class="row" style="text-align: center;">
+    <h2>Summary:</h2>
+</div>
+<div class="row" style="text-align: center;">
+    <p style="margin-left: 20px; margin-right: 20px;">
+        {{ summary }}
+    </p>
+</div>
+{% endif %}
+{% if error_message %}
+<div class="row" style="text-align: center;">
+    <h2>Error</h2>
+</div>
+<div class="row" style="text-align: center;">
+    <p style="margin-left: 20px; margin-right: 20px;">{{ error_message }}</p>
+</div>
+{% endif %}
 {% endblock %}
