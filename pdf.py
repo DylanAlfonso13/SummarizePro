@@ -24,7 +24,8 @@ def pdf_summary(pdf_file):
         model="gpt-3.5-turbo-16k-0613",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Summarize the text:" + str(json_text)},
+            {"role": "user", "content": "Summarize the text:" +
+                str(json_text)},
 
 
         ],
