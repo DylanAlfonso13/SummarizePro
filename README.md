@@ -6,6 +6,7 @@ Using GPT API to summarize articles and PDFs
 * We feel you... Which is why we created this app! 
     * It simply reads in a URL for an article or a PDF
     * BOOM! Now you have the summary that ChatGPT would provide you with half the hassle!
+    
 ## Built With
 <img height="50" src="https://user-images.githubusercontent.com/25181517/183423507-c056a6f9-1ba8-4312-a350-19bcbc5a8697.png">
 <img height="50" src="https://user-images.githubusercontent.com/25181517/183423775-2276e25d-d43d-4e58-890b-edbc88e915f7.png">
@@ -14,7 +15,6 @@ Using GPT API to summarize articles and PDFs
 <img height="50" src="https://user-images.githubusercontent.com/25181517/192158954-f88b5814-d510-4564-b285-dff7d6400dad.png">
 <img height="50" src="https://user-images.githubusercontent.com/25181517/183898054-b3d693d4-dafb-4808-a509-bab54cf5de34.png">
 <img height="50" src ="https://user-images.githubusercontent.com/25181517/117447155-6a868a00-af3d-11eb-9cfe-245df15c9f3f.png">
-
 
 ## Setup
 ### If you would like to use this app locally and edit it yourself, follow these steps
@@ -42,8 +42,8 @@ Using GPT API to summarize articles and PDFs
     ```sh
     python app.py
     ```
-    
+
 ## Programmers Involved: 
-Dylan Alfonso
-Diego Santiago
-Eunice Hassan 
+* Dylan Alfonso
+* Diego Santiago
+* Eunice Hassan 
