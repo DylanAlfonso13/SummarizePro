@@ -16,4 +16,4 @@ jobs:
         run: pip3 install -r requirements.txt
           
       - name: Test webpages
-        run: python3 tests/testfile.py
+        run: python3 testfile.py

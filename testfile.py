@@ -1,6 +1,8 @@
-import unittest, sys
+import unittest
+import sys
 from app import app
 sys.path.append('../SummarizePro')
+
 
 class TestFile(unittest.TestCase):
 
@@ -26,6 +28,7 @@ class TestFile(unittest.TestCase):
     def test_fake_route(self):
         response = app.test_client().get('/;aldkfj')
         self.assertNotEqual(response.status_code, 200)
+
 
 if __name__ == "__main__":
     unittest.main()
