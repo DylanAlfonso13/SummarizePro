@@ -112,9 +112,9 @@ body {
     z-index: -1;
   }
 
-  @media only screen and (max-width: 576px){
-    .chatlogo{
-      display: none;
+  @media only screen and (max-width: 150px){
+    body{
+      text-align: left;
     }
   }
 
