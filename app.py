@@ -38,9 +38,7 @@ def pdf():
             db.session.commit()
             return render_template('pdf_page.html', summary=summary)
         except Exception:
-            error_message = (
-                "Try inputting a different file, it's likely the wrong type"
-            )
+            error_message = str(e)
             return render_template(
                 'pdf_page.html',
                 error_message=error_message
