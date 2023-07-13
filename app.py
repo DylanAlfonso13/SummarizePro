@@ -4,10 +4,16 @@ from flask_sqlalchemy import SQLAlchemy
 from pdf import pdf_summary
 from url import grabText, gen_summary
 import git
+from dotenv import load_dotenv
+import openai
+import os
 
 
 # create Flask App
 app = Flask(__name__)
+# Load in API Key
+load_dotenv()
+openai.api_key = os.environ.get('OPENAI_API_KEY')
 # create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
