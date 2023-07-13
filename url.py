@@ -2,9 +2,10 @@ import requests
 import openai
 from bs4 import BeautifulSoup
 
+
 def grabText(url):
     # Have the limit at 3000 characters as of right now
-    max_test_size=5000
+    max_test_size = 5000
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     main_tag = soup.find('main')
@@ -14,12 +15,14 @@ def grabText(url):
     text = text[:max_test_size]
     return text
 
+
 def gen_summary(text):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"Summarize the following article:\n{text}"},
+            {"role": "user",
+                "content": f"Summarize the following article:\n{text}"},
             {"role": "assistant", "content": "Summary:"}
         ],
         temperature=0.5,
