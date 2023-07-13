@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from pdf import pdf_summary
-
+from url import grabText, gen_summary
 
 
 #create Flask App
