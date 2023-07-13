@@ -3,6 +3,7 @@ from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from pdf import pdf_summary
 from url import grabText, gen_summary
+import git
 
 
 # create Flask App
@@ -95,6 +96,17 @@ class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     DBurl = db.Column(db.String(200), nullable=False)
     DBsummary = db.Column(db.Text, nullable=False)
+
+
+@app.route("/update_server", methods=['POST'])
+def webhook():
+    if request.method == 'POST':
+        repo = git.Repo('/home/summarizepro/SummarizePro')
+        origin = repo.remotes.origin
+        origin.pull()
+        return 'Updated PythonAnywhere successfully', 200
+    else:
+        return 'Wrong event type', 400
 
 
 # Creates tables
