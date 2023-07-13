@@ -1,7 +1,5 @@
 import unittest
 from app import app
-from url import gen_summary
-from pdf import pdf_summary
 
 class TestFile(unittest.TestCase):
     def test_index_route(self):
