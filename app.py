@@ -37,7 +37,7 @@ def pdf():
             db.session.add(new_summary)
             db.session.commit()
             return render_template('pdf_page.html', summary=summary)
-        except Exception:
+        except Exception as e:
             error_message = str(e)
             return render_template(
                 'pdf_page.html',
