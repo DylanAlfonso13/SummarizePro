@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 
 
 def grabText(url):
-    # Have the limit at 3000 characters as of right now
-    max_test_size = 5000
+    # Have the limit at 10000 characters as of right now
+    max_test_size = 10000
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
     main_tag = soup.find('main')
