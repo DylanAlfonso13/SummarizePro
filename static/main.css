@@ -93,8 +93,15 @@ body {
   }
 
   .btn-primary {
-    background: #9CEBBB;
+    background-color: #9CEBBB;
+    border-color: #000000; /* Outline color */
   }
+  
+  .btn-primary:hover {
+    background-color: #000000; /* Color on hover */
+    border-color: #000000; /* Outline color on hover */
+  }
+
   .site-header .navbar-nav {
     margin-left: auto; 
   }
