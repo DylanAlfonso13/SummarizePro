@@ -17,7 +17,6 @@ def pdf_summary(pdf_file):
     json_output_path = 'path_to_output_json_file.json'
 
     with open(json_output_path, 'w') as json_file:
-        # json_text = json_file.write(json_data)
         json_text = json_data
 
     response = openai.ChatCompletion.create(

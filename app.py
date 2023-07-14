@@ -23,8 +23,6 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
-# Note: make sure later we have summary add to DB
-
 
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
@@ -43,17 +41,8 @@ def pdf():
                 'pdf_page.html',
                 error_message=error_message
             )
-        # value = request.form.get('fileupload')
-        # print(value)
-        # return value
-        # pdf_to_text(value)
 
     return render_template('pdf_page.html')
-
-# @app.route('/convert', methods=['POST'])
-# def convert():
-    # pdf_file = request.files['pdfFile']
-    # return pdf_summary(pdf_file)
 
 
 @app.route('/article', methods=['GET', 'POST'])
@@ -81,20 +70,6 @@ def summaries():
     summaries = Summary.query.all()
     return render_template('summaries.html', summaries=summaries)
 
-# Database Model Objects
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.username}', '{self.email}')"
-    with app.app_context():
-        db.create_all()
-
 
 class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -102,20 +77,9 @@ class Summary(db.Model):
     DBsummary = db.Column(db.Text, nullable=False)
 
 
-@app.route("/update_server", methods=['POST'])
-def webhook():
-    if request.method == 'POST':
-        repo = git.Repo('/home/summarizepro/SummarizePro')
-        origin = repo.remotes.origin
-        origin.pull()
-        return 'Updated PythonAnywhere successfully', 200
-    else:
-        return 'Wrong event type', 400
-
-
-# Creates tables
 with app.app_context():
     db.create_all()
+
 
 # Runs apps with configs
 if __name__ == '__main__':
