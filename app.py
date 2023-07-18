@@ -1,8 +1,12 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrpyt
+from flask_login import LoginManager, login_required
+from .models import user
 from pdf import pdf_summary
 from url import grabText, gen_summary
+from forms import RegistrationForm, LoginForm
 import git
 from dotenv import load_dotenv
 import openai
@@ -17,6 +21,8 @@ openai.api_key = os.environ.get('OPENAI_API_KEY')
 # create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -66,15 +72,49 @@ def article():
 
 
 @app.route('/summaries')
+@login_required
 def summaries():
     summaries = Summary.query.all()
     return render_template('summaries.html', summaries=summaries)
+
+
+@app.route('/register', methods =['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_pass = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, password=hashed_pass)
+        db.session.add(user)
+        db.session.commit()
+    return render_template(register.html, form=form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            # Log in the user (You can use Flask-Login for this)
+            return redirect(url_for('dashboard'))  # Redirect to the user dashboard
+    return render_template('login.html', form=form)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     DBurl = db.Column(db.String(200), nullable=False)
     DBsummary = db.Column(db.Text, nullable=False)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key =True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
 
 
 with app.app_context():

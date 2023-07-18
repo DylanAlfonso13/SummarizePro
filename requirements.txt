@@ -5,6 +5,8 @@ Flask==2.3.2
 flask_behind_proxy==0.1.1
 flask_sqlalchemy==3.0.5
 Flask-WTF==1.1.1
+Flask-Bcrypt
+Flask-Login
 GitPython==3.1.31
 gunicorn
 itsdangerous==2.1.2
