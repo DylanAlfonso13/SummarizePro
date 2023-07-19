@@ -47,6 +47,7 @@ def pdf():
 
     return render_template('pdf_page.html')
 
+
 @app.route('/article', methods=['GET', 'POST'])
 def article():
     if request.method == "POST":
@@ -71,6 +72,7 @@ def article():
 def summaries():
     summaries = Summary.query.all()
     return render_template('summaries.html', summaries=summaries)
+
 
 class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
