@@ -20,7 +20,7 @@ def pdf_summary(pdf_file):
     json_data = json.dumps(extracted_data)
     json_output_path = 'path_to_output_json_file.json'
 
-    with open(json_output_path, 'w') as json_file:
+    with open(json_output_path, 'w'):
         json_text = json_data
 
     response = openai.ChatCompletion.create(
@@ -29,8 +29,6 @@ def pdf_summary(pdf_file):
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Summarize the text:" +
                 str(json_text)},
-
-
         ],
         temperature=1,
     )

@@ -3,6 +3,7 @@ from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from pdf import pdf_summary
 from url import grabText, gen_summary
+from video import get_transcript, divide_transcript, summarize_transcript
 import git
 from dotenv import load_dotenv
 import openai

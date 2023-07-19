@@ -10,7 +10,6 @@ def get_transcript(link):
     result = ""
     for i in transcript:
         result += " " + i["text"]
-    print(len(result))
     return result
 
 
@@ -41,7 +40,7 @@ def summarize_transcript(transcript):
     # Divide the transcript into smaller chunks
     chunks = divide_transcript(transcript)
 
-    # Summarize each chunk using OpenAI API
+    # Summarizing the chunks
     summaries = []
     for chunk in chunks:
         response = openai.ChatCompletion.create(
@@ -54,7 +53,16 @@ def summarize_transcript(transcript):
             temperature=1,)
         summaries.append(response["choices"][0]["message"]["content"])
 
-    # Combine the summaries into a single summary
     combined_summary = ' '.join(summaries)
 
-    return combined_summary
+    # Summarizing the combined_summary
+    response2 = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-16k-0613",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": "Summarize this combination of summaries "
+                                        + "of a video transcript:" + combined_summary}
+        ],
+        temperature=1,)
+    final_sum = response2["choices"][0]["message"]["content"]
+    return final_sum
