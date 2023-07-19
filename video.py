@@ -61,7 +61,7 @@ def summarize_transcript(transcript):
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Connect this collection of summaries "
-                                        + "into one fluid summary" + combined_summary}
+             + "into one fluid summary" + combined_summary}
         ],
         temperature=1,)
     final_sum = response2["choices"][0]["message"]["content"]
