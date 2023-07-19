@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
-from pdf import pdf_summary
+from pdf import grab_pdf, pdf_summary
 from url import grabText, gen_summary
 from video import get_transcript, divide_transcript, summarize_transcript
 import git
@@ -31,7 +31,9 @@ def pdf():
         try:
             pdf_file = request.files['pdfFile']
             filename = pdf_file.filename
-            summary = pdf_summary(pdf_file)
+            text = grab_pdf(pdf_file)
+            summary = pdf_summary(text)
+            # summary = pdf_summary(pdf_file)
             new_summary = Summary(DBurl=filename, DBsummary=summary)
             db.session.add(new_summary)
             db.session.commit()
@@ -44,7 +46,6 @@ def pdf():
             )
 
     return render_template('pdf_page.html')
-
 
 @app.route('/article', methods=['GET', 'POST'])
 def article():
@@ -70,7 +71,6 @@ def article():
 def summaries():
     summaries = Summary.query.all()
     return render_template('summaries.html', summaries=summaries)
-
 
 class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
