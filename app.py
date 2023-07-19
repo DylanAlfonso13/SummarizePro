@@ -70,6 +70,10 @@ def summaries():
     summaries = Summary.query.all()
     return render_template('summaries.html', summaries=summaries)
 
+@app.route('/video')
+def video():
+    return render_template('video_page.html')
+
 
 class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
