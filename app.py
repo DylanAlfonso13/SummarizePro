@@ -70,6 +70,7 @@ def summaries():
     summaries = Summary.query.all()
     return render_template('summaries.html', summaries=summaries)
 
+
 @app.route('/video')
 def video():
     return render_template('video_page.html')
