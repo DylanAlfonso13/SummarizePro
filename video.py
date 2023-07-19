@@ -48,7 +48,7 @@ def summarize_transcript(transcript):
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": "Summarize this piece "
-                 + "of a video transcript:" + chunk}
+                                            + "of a video transcript: " + chunk}
             ],
             temperature=1,)
         summaries.append(response["choices"][0]["message"]["content"])
@@ -60,8 +60,8 @@ def summarize_transcript(transcript):
         model="gpt-3.5-turbo-16k-0613",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": "Summarize this combination of summaries "
-                                        + "of a video transcript:" + combined_summary}
+            {"role": "user", "content": "Connect this collection of summaries "
+                                        + "into one fluid summary" + combined_summary}
         ],
         temperature=1,)
     final_sum = response2["choices"][0]["message"]["content"]
