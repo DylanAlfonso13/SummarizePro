@@ -1,16 +1,59 @@
 from youtube_transcript_api import YouTubeTranscriptApi
-from transformers import pipeline
-# from IPython.display import YouTubeVideo
+import openai
 
 
-def youtube_summary(link):
+def get_transcript(link):
+    # Retrieves the video transcript
     video_id = link.split("=")[1]
     transcript = YouTubeTranscriptApi.get_transcript(video_id)
 
     result = ""
     for i in transcript:
         result += " " + i["text"]
+    print(len(result))
     return result
 
-summarizer = pipeline("summarization")
-# print(youtube_summary("https://www.youtube.com/watch?v=zW_kG_NORYo"))
+
+def divide_transcript(transcript, chunk_size=0):
+    # Determines the chunk_size
+    length = len(transcript)
+    if length <= 5000:
+        chunk_size = 1000
+    if length > 5000 and length <= 15000:
+        chunk_size = 5000
+    if length > 15000 and length <= 30000:
+        chunk_size = 8000
+    if length > 30000:
+        chunk_size = 10000
+
+    # Divide the transcript into smaller chunks
+    chunks = []
+    num_chunks = len(transcript) // chunk_size
+    for i in range(num_chunks):
+        start = i * chunk_size
+        end = start + chunk_size
+        chunks.append(transcript[start:end])
+
+    return chunks
+
+
+def summarize_transcript(transcript):
+    # Divide the transcript into smaller chunks
+    chunks = divide_transcript(transcript)
+
+    # Summarize each chunk using OpenAI API
+    summaries = []
+    for chunk in chunks:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-16k-0613",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": "Summarize this piece of a video transcript:" + chunk}
+            ],
+            temperature=1,)
+        summaries.append(response["choices"][0]["message"]["content"])
+
+    # Combine the summaries into a single summary
+    combined_summary = ' '.join(summaries)
+
+    return combined_summary
