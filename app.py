@@ -108,7 +108,7 @@ def login():
 
     user = User.query.filter_by(username=username).first()
 
-    if user and user.password == password:
+    if user and bcrypt.check_password_hash(user.password, password):
         login_user(user)
         response = {'message': 'Login successful'}
         return jsonify(response)
@@ -143,6 +143,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
+
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
 
     @property
     def is_active(self):
