@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, request, flash, jsonify
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -77,32 +77,37 @@ def summaries():
     return render_template('summaries.html', summaries=summaries)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(
-            form.password.data).decode('utf-8')
-        user = User(username=form.username.data, password=hashed_pass)
-        db.session.add(user)
-        db.session.commit()
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('index'))
-    return render_template('register.html', form=form)
+    username = request.form['username']
+    password = request.form['password']
+
+    user = User.query.filter_by(username=username).first()
+    if user:
+        response = {'message': 'Username already exists'}
+        return jsonify(response), 400
+
+    new_user = User(username=username, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    response = {'message': 'Registration successful'}
+    return jsonify(response)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and bcrypt.check_password_hash(
-            user.password,
-            form.password.data
-        ):
-            # Log in the user (You can use Flask-Login for this)
-            return redirect(url_for('index'))  # Redirect to the user dashboard
-    return render_template('login.html', form=form)
+    username = request.form['username']
+    password = request.form['password']
+
+    user = User.query.filter_by(username=username).first()
+
+    if user and user.password == password:
+        response = {'message': 'Login successful'}
+        return jsonify(response)
+
+    response = {'message': 'Invalid username or password'}
+    return jsonify(response), 400
 
 
 @login_manager.user_loader
