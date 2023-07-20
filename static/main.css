@@ -195,6 +195,64 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+
+#pdf-form .form-group {
+  margin-bottom: 0; 
+}
+
+
+#pdf-form .text-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+#pdf-form .form-group input[type="file"] {
+  width: 140px;
+  margin-right: 10px;
+}
+
+
+#pdf-form .btn-primary {
+  width: 150px;
+}
+
+
+.row p {
+  text-align: center;
+  padding: 20px 100px;
+}
+
+
+.btn-primary {
+  width: 250px; 
+  margin: 5px; 
+}
+
+
+@media (min-width: 576px) {
+  .btn-primary {
+    width: 250px; 
+  }
+}
+
+
+@media (min-width: 992px) {
+  .row .col {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+  }
+
+  .row .col .btn-primary {
+    width: 250px; 
+  }
+
+  .row .col .btn-primary + .btn-primary {
+    margin-left: 10px; 
+  }
+}
   
   
   
