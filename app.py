@@ -3,7 +3,7 @@ from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from pdf import grab_pdf, pdf_summary
 from url import grabText, gen_summary
-from video import get_transcript, divide_transcript, summarize_transcript
+from video import get_transcript, summarize_transcript
 import git
 from dotenv import load_dotenv
 import openai
@@ -74,8 +74,23 @@ def summaries():
     return render_template('summaries.html', summaries=summaries)
 
 
-@app.route('/video')
+@app.route('/video', methods=['GET', 'POST'])
 def video():
+    if request.method == "POST":
+        link = request.form['url']
+        try:
+            text = get_transcript(link)
+            summary = summarize_transcript(text)
+            new_summary = Summary(DBurl=link, DBsummary=summary)
+            db.session.add(new_summary)
+            db.session.commit()
+            return render_template('video_page.html', summary=summary)
+        except Exception as e:
+            error_message = str(e)
+            return render_template(
+                'video_page.html',
+                error_message=error_message
+            )
     return render_template('video_page.html')
 
 
