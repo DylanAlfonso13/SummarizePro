@@ -1,6 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, request, flash, jsonify
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_required
+from forms import RegistrationForm, LoginForm
 from pdf import grab_pdf, pdf_summary
 from url import grabText, gen_summary
 from video import get_transcript, summarize_transcript
@@ -18,6 +21,8 @@ openai.api_key = os.environ.get('OPENAI_API_KEY')
 # create sqlite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -69,12 +74,51 @@ def article():
 
 
 @app.route('/summaries')
+# @login_required
 def summaries():
     summaries = Summary.query.all()
     return render_template('summaries.html', summaries=summaries)
 
 
-@app.route('/video', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form['username']
+    password = request.form['password']
+
+    user = User.query.filter_by(username=username).first()
+    if user:
+        response = {'message': 'Username already exists'}
+        return jsonify(response), 400
+
+    new_user = User(username=username, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    response = {'message': 'Registration successful'}
+    return jsonify(response)
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+    user = User.query.filter_by(username=username).first()
+
+    if user and user.password == password:
+        response = {'message': 'Login successful'}
+        return jsonify(response)
+
+    response = {'message': 'Invalid username or password'}
+    return jsonify(response), 400
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+@app.route('/video')
 def video():
     if request.method == "POST":
         link = request.form['url']
@@ -98,6 +142,12 @@ class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     DBurl = db.Column(db.String(200), nullable=False)
     DBsummary = db.Column(db.Text, nullable=False)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
 
 
 with app.app_context():
