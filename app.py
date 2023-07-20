@@ -32,6 +32,28 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/video', methods=['GET', 'POST'])
+def video():
+    if request.method == "POST":
+        link = request.form['url']
+        print(link)
+        print("HIII")
+        try:
+            text = get_transcript(link)
+            summary = summarize_transcript(text)
+            new_summary = Summary(DBurl=link, DBsummary=summary, user_id=current_user.id)
+            db.session.add(new_summary)
+            db.session.commit()
+            return render_template('video_page.html', summary=summary)
+        except Exception as e:
+            error_message = str(e)
+            return render_template(
+                'video_page.html',
+                error_message=error_message
+            )
+    return render_template('video_page.html')
+
+
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
     if request.method == 'POST':
@@ -133,26 +155,6 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unAuthorized():
     return "Unauthorized. Please log in to access this page.", 401
-
-
-@app.route('/video')
-def video():
-    if request.method == "POST":
-        link = request.form['url']
-        try:
-            text = get_transcript(link)
-            summary = summarize_transcript(text)
-            new_summary = Summary(DBurl=link, DBsummary=summary)
-            db.session.add(new_summary)
-            db.session.commit()
-            return render_template('video_page.html', summary=summary)
-        except Exception as e:
-            error_message = str(e)
-            return render_template(
-                'video_page.html',
-                error_message=error_message
-            )
-    return render_template('video_page.html')
 
 
 class Summary(db.Model):
