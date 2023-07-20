@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash, jsonify
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_required
+from flask_login import LoginManager, login_required, current_user, login_user
 from forms import RegistrationForm, LoginForm
 from pdf import grab_pdf, pdf_summary
 from url import grabText, gen_summary
@@ -23,6 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
+login_manager.init_app(app)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -38,8 +39,8 @@ def pdf():
             filename = pdf_file.filename
             text = grab_pdf(pdf_file)
             summary = pdf_summary(text)
-            # summary = pdf_summary(pdf_file)
-            new_summary = Summary(DBurl=filename, DBsummary=summary)
+            new_summary = Summary(
+                DBurl=filename, DBsummary=summary, user_id=current_user.id)
             db.session.add(new_summary)
             db.session.commit()
             return render_template('pdf_page.html', summary=summary)
@@ -60,7 +61,8 @@ def article():
         try:
             text = grabText(url)
             summary = gen_summary(text)
-            new_summary = Summary(DBurl=url, DBsummary=summary)
+            new_summary = Summary(
+                DBurl=url, DBsummary=summary, user_id=current_user.id)
             db.session.add(new_summary)
             db.session.commit()
             return render_template('article_page.html', summary=summary)
@@ -74,9 +76,10 @@ def article():
 
 
 @app.route('/summaries')
-# @login_required
+@login_required
 def summaries():
-    summaries = Summary.query.all()
+    print(current_user)
+    summaries = Summary.query.filter_by(user_id=current_user.id).all()
     return render_template('summaries.html', summaries=summaries)
 
 
@@ -106,6 +109,7 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and user.password == password:
+        login_user(user)
         response = {'message': 'Login successful'}
         return jsonify(response)
 
@@ -118,6 +122,11 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+@login_manager.unauthorized_handler
+def unAuthorized():
+    return "Unauthorized. Please log in to access this page.", 401
+
+
 @app.route('/video')
 def video():
     return render_template('video_page.html')
@@ -127,12 +136,24 @@ class Summary(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     DBurl = db.Column(db.String(200), nullable=False)
     DBsummary = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    def get_id(self):
+        return str(self.id)
 
 
 with app.app_context():
