@@ -41,7 +41,10 @@ def video():
         try:
             text = get_transcript(link)
             summary = summarize_transcript(text)
-            new_summary = Summary(DBurl=link, DBsummary=summary, user_id=current_user.id)
+            new_summary = Summary(DBurl=link,
+                                  DBsummary=summary,
+                                  user_id=current_user.id
+                                  )
             db.session.add(new_summary)
             db.session.commit()
             return render_template('video_page.html', summary=summary)
