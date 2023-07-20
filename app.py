@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, flash, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_required, current_user, login_user
+from flask_login import (
+    LoginManager, login_required, current_user, login_user, logout_user)
 from forms import RegistrationForm, LoginForm
 from pdf import grab_pdf, pdf_summary
 from url import grabText, gen_summary
@@ -117,6 +118,13 @@ def login():
     return jsonify(response), 400
 
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -144,11 +152,9 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
 
-
     def __init__(self, username, password):
         self.username = username
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
-
 
     @property
     def is_active(self):
