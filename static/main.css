@@ -254,5 +254,41 @@ body {
   }
 }
   
+
+.visually-hidden {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  pointer-events: none;
+}
+
+
+.pdfbtn {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  color: #fff;
+  background-color: #9CEBBB;
+  border-color: #000000;
+  cursor: pointer;
+}
+
+
+.pdfbtn:hover {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+
+.pdfbtn:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.pdfbtn + .form-control-file {
+  width: 140px;
+  margin-right: 10px;
+}
+
   
   
