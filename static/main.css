@@ -290,5 +290,19 @@ body {
   margin-right: 10px;
 }
 
+/* Center the introp paragraph for all devices */
+.introp-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 100px;
+}
+
+.introp {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+
   
   
