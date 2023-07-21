@@ -36,17 +36,16 @@ def index():
 def video():
     if request.method == "POST":
         link = request.form['url']
-        print(link)
-        print("HIII")
         try:
             text = get_transcript(link)
             summary = summarize_transcript(text)
-            new_summary = Summary(DBurl=link,
-                                  DBsummary=summary,
-                                  user_id=current_user.id
-                                  )
-            db.session.add(new_summary)
-            db.session.commit()
+            if (current_user.is_authenticated):
+                new_summary = Summary(DBurl=link,
+                                      DBsummary=summary,
+                                      user_id=current_user.id
+                                      )
+                db.session.add(new_summary)
+                db.session.commit()
             return render_template('video_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
@@ -65,10 +64,11 @@ def pdf():
             filename = pdf_file.filename
             text = grab_pdf(pdf_file)
             summary = pdf_summary(text)
-            new_summary = Summary(
-                DBurl=filename, DBsummary=summary, user_id=current_user.id)
-            db.session.add(new_summary)
-            db.session.commit()
+            if (current_user.is_authenticated):
+                new_summary = Summary(
+                    DBurl=filename, DBsummary=summary, user_id=current_user.id)
+                db.session.add(new_summary)
+                db.session.commit()
             return render_template('pdf_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
@@ -87,10 +87,11 @@ def article():
         try:
             text = grabText(url)
             summary = gen_summary(text)
-            new_summary = Summary(
-                DBurl=url, DBsummary=summary, user_id=current_user.id)
-            db.session.add(new_summary)
-            db.session.commit()
+            if (current_user.is_authenticated):
+                new_summary = Summary(
+                    DBurl=url, DBsummary=summary, user_id=current_user.id)
+                db.session.add(new_summary)
+                db.session.commit()
             return render_template('article_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
