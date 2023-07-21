@@ -290,17 +290,16 @@ body {
   margin-right: 10px;
 }
 
-/* Center the introp paragraph for all devices */
-.introp-row {
+
+.center-content {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 100px;
+  justify-content: center; 
+  align-items: center; 
 }
 
 .introp {
-  margin-left: 20px;
-  margin-right: 20px;
+  max-width: 1200px; 
+  margin: 50 auto; 
 }
 
 
