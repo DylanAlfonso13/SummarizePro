@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import (
+    Flask, render_template, request, jsonify, redirect, url_for, flash)
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -108,6 +109,27 @@ def summaries():
     print(current_user)
     summaries = Summary.query.filter_by(user_id=current_user.id).all()
     return render_template('summaries.html', summaries=summaries)
+
+
+@app.route('/delete_summary/<int:summary_id>', methods=['DELETE'])
+@login_required
+def delete_summary(summary_id):
+    summary = Summary.query.get_or_404(summary_id)
+
+    # Check if the current user is the owner of the summary
+    if current_user.id != summary.user_id:
+        abort(403)  # Forbidden
+
+    try:
+        # Delete the summary from the database
+        db.session.delete(summary)
+        db.session.commit()
+        flash('Summary deleted successfully.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Failed to delete the summary.', 'danger')
+
+    return jsonify({'message': 'Summary deleted successfully'})
 
 
 @app.route('/register', methods=['POST'])
