@@ -72,5 +72,17 @@
     document.getElementById("submit-button").style.display = "none";
     document.getElementById("spinner").style.display = "block";
   });
+
+  
+  const pdfFileInput = document.getElementById("pdfFile");
+  const pdfFileLabel = document.querySelector("label[for='pdfFile']");
+
+  
+  pdfFileInput.addEventListener("change", function () {
+    
+    const fileName = pdfFileInput.files[0].name;
+    
+    pdfFileLabel.textContent = fileName;
+  });
 </script>
 {% endblock %}
