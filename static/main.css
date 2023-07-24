@@ -302,6 +302,49 @@ body {
   margin: 50 auto; 
 }
 
+.summary-toggle-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  color: #fff;
+  background-color: #9CEBBB;
+  border-color: #000000;
+  cursor: pointer;
+}
+  
+.summary-toggle-btn:hover {
+  background-color: #000000;
+  border-color: #000000;
+}
 
-  
-  
+.summary-toggle-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.summary-toggle-btn + .form-control-file {
+  width: 140px;
+  margin-right: 10px;
+}
+
+.summary-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.delete-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  color: #fff;
+  background-color: #dc3545; /* Bootstrap's danger color */
+  border-color: #dc3545; /* Bootstrap's danger color */
+  cursor: pointer;
+}
+.delete-btn:hover {
+  background-color: #c82333; /* Darker shade for hover effect */
+  border-color: #bd2130; /* Darker shade for hover effect */
+}
