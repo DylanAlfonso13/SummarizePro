@@ -32,6 +32,30 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/video', methods=['GET', 'POST'])
+def video():
+    if request.method == "POST":
+        link = request.form['url']
+        try:
+            text = get_transcript(link)
+            summary = summarize_transcript(text)
+            if (current_user.is_authenticated):
+                new_summary = Summary(DBurl=link,
+                                      DBsummary=summary,
+                                      user_id=current_user.id
+                                      )
+                db.session.add(new_summary)
+                db.session.commit()
+            return render_template('video_page.html', summary=summary)
+        except Exception as e:
+            error_message = str(e)
+            return render_template(
+                'video_page.html',
+                error_message=error_message
+            )
+    return render_template('video_page.html')
+
+
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
     if request.method == 'POST':
@@ -40,10 +64,11 @@ def pdf():
             filename = pdf_file.filename
             text = grab_pdf(pdf_file)
             summary = pdf_summary(text)
-            new_summary = Summary(
-                DBurl=filename, DBsummary=summary, user_id=current_user.id)
-            db.session.add(new_summary)
-            db.session.commit()
+            if (current_user.is_authenticated):
+                new_summary = Summary(
+                    DBurl=filename, DBsummary=summary, user_id=current_user.id)
+                db.session.add(new_summary)
+                db.session.commit()
             return render_template('pdf_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
@@ -62,10 +87,11 @@ def article():
         try:
             text = grabText(url)
             summary = gen_summary(text)
-            new_summary = Summary(
-                DBurl=url, DBsummary=summary, user_id=current_user.id)
-            db.session.add(new_summary)
-            db.session.commit()
+            if (current_user.is_authenticated):
+                new_summary = Summary(
+                    DBurl=url, DBsummary=summary, user_id=current_user.id)
+                db.session.add(new_summary)
+                db.session.commit()
             return render_template('article_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
@@ -133,26 +159,6 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unAuthorized():
     return "Unauthorized. Please log in to access this page.", 401
-
-
-@app.route('/video')
-def video():
-    if request.method == "POST":
-        link = request.form['url']
-        try:
-            text = get_transcript(link)
-            summary = summarize_transcript(text)
-            new_summary = Summary(DBurl=link, DBsummary=summary)
-            db.session.add(new_summary)
-            db.session.commit()
-            return render_template('video_page.html', summary=summary)
-        except Exception as e:
-            error_message = str(e)
-            return render_template(
-                'video_page.html',
-                error_message=error_message
-            )
-    return render_template('video_page.html')
 
 
 class Summary(db.Model):
