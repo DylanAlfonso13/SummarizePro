@@ -1,4 +1,5 @@
 from youtube_transcript_api import YouTubeTranscriptApi
+from pytube import YouTube
 import openai
 
 
@@ -66,3 +67,13 @@ def summarize_transcript(transcript):
         temperature=1,)
     final_sum = response2["choices"][0]["message"]["content"]
     return final_sum
+
+
+def get_video_title(video_url):
+    try:
+        yt = YouTube(video_url)
+        video_title = yt.title
+        return video_title
+    except Exception as e:
+        print(f"Error: {e}")
+        # return None

@@ -7,7 +7,7 @@ from flask_login import (
 from forms import RegistrationForm, LoginForm
 from pdf import grab_pdf, pdf_summary
 from url import grabText, gen_summary
-from video import get_transcript, summarize_transcript
+from video import get_transcript, summarize_transcript, get_video_title
 import git
 from dotenv import load_dotenv
 import openai
@@ -38,9 +38,10 @@ def video():
         link = request.form['url']
         try:
             text = get_transcript(link)
+            title = get_video_title(link)
             summary = summarize_transcript(text)
             if (current_user.is_authenticated):
-                new_summary = Summary(DBurl=link,
+                new_summary = Summary(DBurl=title,
                                       DBsummary=summary,
                                       user_id=current_user.id
                                       )
