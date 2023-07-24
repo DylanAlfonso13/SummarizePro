@@ -1,24 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="row" style="text-align: center;">
-    <h1>History of Summaries</h1>
+<!-- Style added to allow for scrolling and so it doesnt go below navbar -->
+<div class="container" style="margin-top: 20px; overflow-y: auto; max-height: 600px;">
+    <div class="row mt-4">
+        <div class="col-12">
+            <h1 class="text-center">History of Summaries</h1>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>URL/FileName</th>
+                        <th>Summary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for summary in summaries %}
+                    <tr>
+                        <td>{{ summary.DBurl }}</td>
+                        <td>
+                            <div class="summary-content">
+                                {{ summary.DBsummary }}
+                            </div>
+                            <button class="summary-toggle-btn">Click to drop down</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<div class="row" style="text-align: center;">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>URL/FileName</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for summary in summaries %}
-            <tr>
-                <td>{{ summary.DBurl }}</td>
-                <td>{{ summary.DBsummary }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+
+<script>
+    // Add an event listener to each toggle button to toggle the display of the summary content
+    const toggleButtons = document.querySelectorAll('.summary-toggle-btn');
+    toggleButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const summaryContent = btn.previousElementSibling;
+            if (!summaryContent.style.maxHeight || summaryContent.style.maxHeight === '0px') {
+                summaryContent.style.maxHeight = summaryContent.scrollHeight + 'px';
+                btn.textContent = 'Click to collapse';
+            } else {
+                summaryContent.style.maxHeight = '0px';
+                btn.textContent = 'Click to drop down';
+            }
+        });
+    });
+</script>
 {% endblock %}
+
