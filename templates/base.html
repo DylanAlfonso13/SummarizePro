@@ -84,6 +84,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         const loginRegisterLink = document.getElementById("loginRegisterLink");
         const popupContainer = document.createElement("div");
+        const loginRegisterButton = document.getElementById("loginRegisterButton");
         popupContainer.className = "popup-container";
         document.body.appendChild(popupContainer);
 
@@ -228,7 +229,7 @@
         }
 
         loginRegisterLink.addEventListener("click", showPopup);
-
+        loginRegisterButton.addEventListener("click", showPopup);
         popupContainer.addEventListener("click", hidePopup);
       });
     </script>
