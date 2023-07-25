@@ -21,5 +21,6 @@ python-dotenv
 Werkzeug==2.3.6
 requests
 pandas
+pyscopg2
 youtube-transcript-api
 pytube
