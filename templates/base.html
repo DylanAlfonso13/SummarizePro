@@ -84,6 +84,7 @@
       document.addEventListener("DOMContentLoaded", () => {
         const loginRegisterLink = document.getElementById("loginRegisterLink");
         const popupContainer = document.createElement("div");
+        const loginRegisterButton = document.getElementById("loginRegisterButton");
         popupContainer.className = "popup-container";
         document.body.appendChild(popupContainer);
 
@@ -141,7 +142,7 @@
                 // Handle successful login
                 loginForm.reset();
                 popupContainer.style.display = "none";
-                location.reload()
+                window.location.href = "/";
               } else {
                 // Handle other JSON response data
                 loginForm.reset();
@@ -228,7 +229,7 @@
         }
 
         loginRegisterLink.addEventListener("click", showPopup);
-
+        loginRegisterButton.addEventListener("click", showPopup);
         popupContainer.addEventListener("click", hidePopup);
       });
     </script>
