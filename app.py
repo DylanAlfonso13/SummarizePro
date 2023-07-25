@@ -17,6 +17,7 @@ import os
 
 # create Flask App
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 # Load in API Key
 load_dotenv()
 openai.api_key = os.environ.get('OPENAI_API_KEY')
@@ -218,5 +219,4 @@ with app.app_context():
 
 # Runs apps with configs different
 if __name__ == '__main__':
-    app.secret_key = os.urandom(24)
     app.run(debug=True, host='0.0.0.0', port='8080')
