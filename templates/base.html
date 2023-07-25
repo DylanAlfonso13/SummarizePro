@@ -35,16 +35,12 @@
             {% else %}
             <a class="nav-item nav-link" href="#" id="loginRegisterLink">Login/Register</a>
             {% endif %}
-            <!-- <a class="nav-item nav-link "href="#" id="loginRegisterLink">Login/Register</a> -->
+            {% if current_user.is_authenticated %}
+              <p class="nav-item" style="margin: 10px 50px;">Signed in as: {{ current_user.username }}</p>
+            {% endif %}
           </div>
         </div>
-        {% if current_user.is_authenticated %}
-        <div class="row justify-content-center">
-          <div class="col-auto">
-            <p class="nav-item">Signed in as: {{ current_user.username }}</p>
-          </div>
-        </div>
-        {% endif %}
+
       </nav>
       
     </header>

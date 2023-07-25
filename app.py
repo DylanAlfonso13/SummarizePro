@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import (
+    Flask, render_template, request, jsonify, redirect, url_for, flash)
 from flask_behind_proxy import FlaskBehindProxy
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -7,7 +8,7 @@ from flask_login import (
 from forms import RegistrationForm, LoginForm
 from pdf import grab_pdf, pdf_summary
 from url import grabText, gen_summary
-from video import get_transcript, summarize_transcript
+from video import get_transcript, summarize_transcript, get_video_title
 import git
 from dotenv import load_dotenv
 import openai
@@ -32,6 +33,31 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/video', methods=['GET', 'POST'])
+def video():
+    if request.method == "POST":
+        link = request.form['url']
+        try:
+            text = get_transcript(link)
+            title = get_video_title(link)
+            summary = summarize_transcript(text)
+            if (current_user.is_authenticated):
+                new_summary = Summary(DBurl=title,
+                                      DBsummary=summary,
+                                      user_id=current_user.id
+                                      )
+                db.session.add(new_summary)
+                db.session.commit()
+            return render_template('video_page.html', summary=summary)
+        except Exception as e:
+            error_message = str(e)
+            return render_template(
+                'video_page.html',
+                error_message=error_message
+            )
+    return render_template('video_page.html')
+
+
 @app.route('/pdf', methods=['GET', 'POST'])
 def pdf():
     if request.method == 'POST':
@@ -40,10 +66,11 @@ def pdf():
             filename = pdf_file.filename
             text = grab_pdf(pdf_file)
             summary = pdf_summary(text)
-            new_summary = Summary(
-                DBurl=filename, DBsummary=summary, user_id=current_user.id)
-            db.session.add(new_summary)
-            db.session.commit()
+            if (current_user.is_authenticated):
+                new_summary = Summary(
+                    DBurl=filename, DBsummary=summary, user_id=current_user.id)
+                db.session.add(new_summary)
+                db.session.commit()
             return render_template('pdf_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
@@ -62,10 +89,11 @@ def article():
         try:
             text = grabText(url)
             summary = gen_summary(text)
-            new_summary = Summary(
-                DBurl=url, DBsummary=summary, user_id=current_user.id)
-            db.session.add(new_summary)
-            db.session.commit()
+            if (current_user.is_authenticated):
+                new_summary = Summary(
+                    DBurl=url, DBsummary=summary, user_id=current_user.id)
+                db.session.add(new_summary)
+                db.session.commit()
             return render_template('article_page.html', summary=summary)
         except Exception as e:
             error_message = str(e)
@@ -82,6 +110,27 @@ def summaries():
     print(current_user)
     summaries = Summary.query.filter_by(user_id=current_user.id).all()
     return render_template('summaries.html', summaries=summaries)
+
+
+@app.route('/delete_summary/<int:summary_id>', methods=['DELETE'])
+@login_required
+def delete_summary(summary_id):
+    summary = Summary.query.get_or_404(summary_id)
+
+    # Check if the current user is the owner of the summary
+    if current_user.id != summary.user_id:
+        abort(403)  # Forbidden
+
+    try:
+        # Delete the summary from the database
+        db.session.delete(summary)
+        db.session.commit()
+        flash('Summary deleted successfully.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Failed to delete the summary.', 'danger')
+
+    return jsonify({'message': 'Summary deleted successfully'})
 
 
 @app.route('/register', methods=['POST'])
@@ -133,26 +182,6 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unAuthorized():
     return "Unauthorized. Please log in to access this page.", 401
-
-
-@app.route('/video')
-def video():
-    if request.method == "POST":
-        link = request.form['url']
-        try:
-            text = get_transcript(link)
-            summary = summarize_transcript(text)
-            new_summary = Summary(DBurl=link, DBsummary=summary)
-            db.session.add(new_summary)
-            db.session.commit()
-            return render_template('video_page.html', summary=summary)
-        except Exception as e:
-            error_message = str(e)
-            return render_template(
-                'video_page.html',
-                error_message=error_message
-            )
-    return render_template('video_page.html')
 
 
 class Summary(db.Model):
