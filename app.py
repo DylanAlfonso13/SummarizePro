@@ -216,7 +216,7 @@ with app.app_context():
     db.create_all()
 
 
-# Runs apps with configs
+# Runs apps with configs different
 if __name__ == '__main__':
     app.secret_key = os.urandom(24)
     app.run(debug=True, host='0.0.0.0', port='8080')
