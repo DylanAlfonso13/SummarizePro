@@ -218,5 +218,5 @@ with app.app_context():
 
 # Runs apps with configs
 if __name__ == '__main__':
-    app.config['SECRET_KEY'] = 'the key you generated'
+    app.secret_key = os.urandom(24)
     app.run(debug=True, host='0.0.0.0', port='8080')
