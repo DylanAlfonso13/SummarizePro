@@ -22,7 +22,7 @@ app.secret_key = os.urandom(24)
 load_dotenv()
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 # create sqlite database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
