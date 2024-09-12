@@ -42,7 +42,7 @@ def pdf_summary(text):
     summaries = []
     for chunk in chunks:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-16k-0613",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": "Summarize this piece of a text:" +
@@ -55,7 +55,7 @@ def pdf_summary(text):
     combined_summary = ' '.join(summaries)
 
     response2 = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k-0613",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": "Connect this collection of summaries "
