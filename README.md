@@ -24,7 +24,7 @@ Using GPT API to summarize articles and PDFs
    ```
 3. Install required packages
    ```sh
-   pip -r requirements.txt
+   pip install -r requirements.txt
    ```
 4. Create a .env file
    ```sh
